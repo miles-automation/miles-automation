@@ -38,16 +38,9 @@
 }
 
 .logoMark {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 8px;
-  background: var(--color-primary);
-  color: var(--color-bg);
-  font-weight: 700;
-  font-size: 1.125rem;
+  flex-shrink: 0;
 }
 
 .logoText {
