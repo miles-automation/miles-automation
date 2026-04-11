@@ -1,228 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Miles Automation - Boutique AI consultancy specializing in agentic AI systems and developer tooling.">
-  <title>Miles Automation | Advanced AI Solutions</title>
-  <link rel="icon" href="favicon.png" type="image/png">
-
-  <!-- Updated Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-  <!-- AOS (for simple fade animations) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-  
-  <!-- Main stylesheet -->
-  <link rel="stylesheet" href="assets/styles/style.css">
-</head>
-<body>
-  <!-- Page Loading Animation -->
-  <div class="page-transition">
-    <div class="loader"></div>
-  </div>
-  
-  <header id="main-header">
-    <div class="contents">
-      <a href="#" class="logo-container">
-        <img src="assets/images/logo.png" alt="Miles Automation Logo" class="logo" />
-        <span class="company-name">Miles Automation</span>
-      </a>
-      
-      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
-        <i class="fas fa-bars"></i>
-      </button>
-      
-      <nav>
-        <ul id="nav-menu">
-          <li><a href="#products" class="nav-link">Products</a></li>
-          <li><a href="#services" class="nav-link">Services</a></li>
-          <li><a href="#about" class="nav-link">About</a></li>
-          <li><a href="#contact" class="nav-link">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <!-- Hero Section -->
-    <section id="hero" data-aos="fade-up">
-        <div class="hero-content">
-          <h1><span class="hero-static">Next Generation</span><br><span class="hero-typing"></span></h1>
-          <p>Custom AI systems and developer tools that think alongside your team</p>
-          <div class="hero-buttons">
-            <a href="#products" class="btn btn-primary">Explore Products</a>
-            <a href="#contact" class="btn btn-outline">Get in Touch</a>
-          </div>
-        </div>
-      </section>
-
-    <!-- Products Section -->
-    <section id="products" data-aos="fade-up">
-      <h1>Products</h1>
-      <div class="products-grid">
-        <div class="service-card" data-aos="fade-up" data-aos-delay="100">
-          <div class="card-header">
-            <div class="card-icon">
-              <!-- Inline SVG for Spark Swarm -->
-               
-              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 200 200">
-                <defs>
-                  <linearGradient id="bgGradientSmall" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#2D3748"/>
-                    <stop offset="100%" stop-color="#1A202C"/>
-                  </linearGradient>
-                </defs>
-              
-                <!-- Background Circle -->
-                <circle cx="100" cy="100" r="98" fill="url(#bgGradientSmall)" stroke="#CBD5E0" stroke-width="6"/>
-              
-                <!-- Central Hexagon -->
-                <polygon class="central-node" fill="#3B82F6" points="80,100 90,83 110,83 120,100 110,117 90,117"/>
-              
-                <!-- Surrounding Hexagons -->
-                <polygon class="outer-node" fill="#CBD5E0" points="80,50 90,33 110,33 120,50 110,67 90,67"/>
-                <polygon class="outer-node" fill="#CBD5E0" points="130,75 140,58 160,58 170,75 160,92 140,92"/>
-                <polygon class="outer-node" fill="#CBD5E0" points="130,125 140,108 160,108 170,125 160,142 140,142"/>
-                <polygon class="outer-node" fill="#CBD5E0" points="80,150 90,133 110,133 120,150 110,167 90,167"/>
-                <polygon class="outer-node" fill="#CBD5E0" points="30,125 40,108 60,108 70,125 60,142 40,142"/>
-                <polygon class="outer-node" fill="#CBD5E0" points="30,75 40,58 60,58 70,75 60,92 40,92"/>
-              </svg>
-            </div>
-            <h3>Spark Swarm</h3>
-          </div>
-          <p>A modular framework for building autonomous AI agents. Spark Swarm integrates LLMs like ChatGPT, Claude, and Gemini to coordinate complex workflows, reasoning steps, and collaborative tasks. Designed for knowledge work, research, and multi-step decision-making.</p>
-          <a href="#contact" class="learn-more">Learn More <i class="fas fa-arrow-right"></i></a>
-        </div>
-        
-        <div class="service-card" data-aos="fade-up" data-aos-delay="200">
-          <div class="card-header">
-            <div class="card-icon">
-              <!-- Inline SVG for Code Loom -->
-              <div class="code-loom-logo">
-                <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <linearGradient id="bgGradient" x1="0" y1="0" x2="64" y2="64">
-                      <stop offset="0%" stop-color="#2D3748"/>
-                      <stop offset="100%" stop-color="#1A202C"/>
-                    </linearGradient>
-                  </defs>
-                  <circle cx="32" cy="32" r="31" fill="url(#bgGradient)" stroke="#CBD5E0" stroke-width="1.5"/>
-                  <g stroke="#60A5FA" stroke-width="2" stroke-linecap="round" class="weave-lines">
-                    <line x1="12" y1="22" x2="42" y2="52"/>
-                    <line x1="17" y1="17" x2="47" y2="47"/>
-                    <line x1="22" y1="12" x2="52" y2="42"/>
-                    <line x1="7" y1="27" x2="37" y2="57"/>
-                    <line x1="27" y1="7" x2="57" y2="37"/>
-                    <line x1="52" y1="22" x2="22" y2="52" stroke="#60A5FA" stroke-dasharray="6,3"/>
-                    <line x1="47" y1="17" x2="17" y2="47" stroke="#60A5FA" stroke-dasharray="6,3"/>
-                    <line x1="42" y1="12" x2="12" y2="42" stroke="#60A5FA" stroke-dasharray="6,3"/>
-                    <line x1="57" y1="27" x2="27" y2="57" stroke="#60A5FA" stroke-dasharray="6,3"/>
-                    <line x1="37" y1="7" x2="7" y2="37" stroke="#60A5FA" stroke-dasharray="6,3"/>
-                  </g>
-                  <text x="32" y="42" fill="#CBD5E0" font-family="monospace" font-size="30" font-weight="bold" text-anchor="middle" class="brackets">{ }</text>
-                </svg>
-            </div>
-            </div>
-            <h3>Code Loom</h3>
-          </div>
-          <p>A VS Code extension that contextualizes your development environment using AI. Code Loom maps relationships between files, functions, and modules—surfacing insight when and where you need it most. Designed to enhance focus, architecture awareness, and flow state.</p>
-          <a href="#contact" class="learn-more">Learn More <i class="fas fa-arrow-right"></i></a>
-        </div>
-      </div>
-    </section>
-    
-
-    <!-- Services Section -->
-    <section id="services" data-aos="fade-up">
-      <h1>Services</h1>
-      <p class="section-intro">Tailored AI solutions to enhance your development workflows and business processes.</p>
-      
-      <ul class="service-list">
-        <li data-aos="fade-up" data-aos-delay="100">
-          <div>
-            <strong>Agentic AI System Design</strong>
-            <span>LLM chaining, orchestration, and autonomy</span>
-          </div>
-        </li>
-        <li data-aos="fade-up" data-aos-delay="150">
-          <div>
-            <strong>Custom Developer Tooling</strong>
-            <span>VS Code extensions, CLI tools, and AI copilots</span>
-          </div>
-        </li>
-        <li data-aos="fade-up" data-aos-delay="200">
-          <div>
-            <strong>API & System Integration</strong>
-            <span>Embedding AI-first workflows into existing systems</span>
-          </div>
-        </li>
-        <li data-aos="fade-up" data-aos-delay="250">
-          <div>
-            <strong>Cloud-Native Deployment</strong>
-            <span>Azure, CI/CD, FastAPI, .NET</span>
-          </div>
-        </li>
-        <li data-aos="fade-up" data-aos-delay="300">
-          <div>
-            <strong>Knowledge Management Automation</strong>
-            <span>Search, summarization, and internal AI tools</span>
-          </div>
-        </li>
-      </ul>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" data-aos="fade-up">
-      <h1>About</h1>
-      <p>Miles Automation is a boutique consultancy focused on cutting-edge AI and developer tooling. We build custom solutions using agentic AI, LLM orchestration, and scalable cloud-native systems. From R&D prototyping to production-ready tools, we help technical teams level up fast—with systems that think alongside you.</p>
-      
-      <div class="about-features">
-        <div class="feature" data-aos="fade-up" data-aos-delay="100">
-          <i class="fas fa-lightbulb"></i>
-          <h3>Innovation-Focused</h3>
-          <p>Leveraging the latest in AI research and development</p>
-        </div>
-        <div class="feature" data-aos="fade-up" data-aos-delay="150">
-          <i class="fas fa-code-branch"></i>
-          <h3>Technical Excellence</h3>
-          <p>Built by developers, for developers</p>
-        </div>
-        <div class="feature" data-aos="fade-up" data-aos-delay="200">
-          <i class="fas fa-rocket"></i>
-          <h3>Production-Ready</h3>
-          <p>From concept to deployment with scalability in mind</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" data-aos="fade-up">
-      <h1>Contact</h1>
-      <div class="contact-content">
-        <p>Let's explore what AI can do for your team. Reach out to discuss your project requirements and how we can help elevate your development workflows.</p>
-        <a href="mailto:info@milesautomation.com" class="mailto-link">
-          <i class="fas fa-envelope"></i> info@milesautomation.com
-        </a>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>© 2025 Miles Automation. All rights reserved.</p>
-  </footer>
-
-  <!-- Scroll to top button -->
-  <button id="scrollToTop" class="scroll-top" aria-label="Scroll to top">
-    <i class="fas fa-arrow-up"></i>
-  </button>
-
-  <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
-  <script src="assets/js/main.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Miles Automation - Boutique AI consultancy specializing in agentic AI systems and developer tooling."
+    />
+    <title>Miles Automation | Advanced AI Solutions</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      defer
+      src="https://analytics.sparkswarm.com/script.js"
+      data-website-id="ca302d24-d841-4f4d-b038-83d29cb515bb"
+    ></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
