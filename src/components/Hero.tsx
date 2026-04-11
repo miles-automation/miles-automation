@@ -8,6 +8,8 @@ const PHRASES = [
   "Developer Tooling",
 ];
 
+const LONGEST = PHRASES.reduce((a, b) => (a.length >= b.length ? a : b));
+
 export default function Hero() {
   const [displayed, setDisplayed] = useState("");
   const state = useRef({ phraseIndex: 0, deleting: false });
@@ -55,9 +57,14 @@ export default function Hero() {
         <h1 className={styles.heading}>
           <span>Build &amp; Ship</span>
           <br />
-          <span className={styles.typed}>
-            {displayed}
-            <span className={styles.cursor}>|</span>
+          <span className={styles.typedWrap}>
+            <span className={styles.sizer} aria-hidden="true">
+              {LONGEST}
+            </span>
+            <span className={styles.typed}>
+              {displayed}
+              <span className={styles.cursor}>|</span>
+            </span>
           </span>
         </h1>
         <p className={styles.sub}>

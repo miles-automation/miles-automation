@@ -21,7 +21,18 @@
   margin-bottom: 1.5rem;
 }
 
+.typedWrap {
+  display: inline-grid;
+}
+
+.sizer {
+  visibility: hidden;
+  grid-area: 1 / 1;
+  color: var(--color-primary);
+}
+
 .typed {
+  grid-area: 1 / 1;
   color: var(--color-primary);
 }
 
@@ -54,5 +65,13 @@
 @media (max-width: 768px) {
   .hero {
     min-height: 85vh;
+  }
+
+  .sizer {
+    display: none;
+  }
+
+  .typedWrap {
+    display: inline;
   }
 }
