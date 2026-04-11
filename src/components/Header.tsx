@@ -24,52 +24,56 @@ export default function Header() {
         <a href="#" className={styles.logo}>
           <svg
             className={styles.logoMark}
-            width="36"
+            width="48"
             height="36"
-            viewBox="0 0 128 128"
+            viewBox="0 0 160 120"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <rect
-              width="128"
-              height="128"
-              rx="16"
-              fill="var(--color-surface)"
-            />
+            {/* [ bracket */}
             <polyline
-              points="24,104 24,24 48,60 72,24 72,104"
-              stroke="var(--color-primary)"
-              strokeWidth="6"
+              points="20,16 8,16 8,104 20,104"
+              stroke="var(--color-text)"
+              strokeWidth="5"
               fill="none"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <circle cx="24" cy="104" r="4.5" fill="var(--color-primary)" />
-            <circle cx="24" cy="24" r="4.5" fill="var(--color-primary)" />
-            <circle cx="48" cy="60" r="4.5" fill="var(--color-primary)" />
-            <circle cx="72" cy="24" r="4.5" fill="var(--color-primary)" />
-            <circle cx="72" cy="104" r="4.5" fill="var(--color-primary)" />
+            {/* M */}
             <polyline
-              points="84,104 106,24 128,104"
-              stroke="var(--color-text-muted)"
-              strokeWidth="6"
+              points="36,96 36,24 60,60 84,24 84,96"
+              stroke="var(--color-text)"
+              strokeWidth="4"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            {/* A */}
+            <polyline
+              points="96,96 114,24 132,96"
+              stroke="var(--color-text)"
+              strokeWidth="4"
               fill="none"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
             <line
-              x1="92"
+              x1="103"
               y1="68"
-              x2="120"
+              x2="125"
               y2="68"
-              stroke="var(--color-text-muted)"
-              strokeWidth="6"
+              stroke="var(--color-text)"
+              strokeWidth="4"
               strokeLinecap="round"
             />
-            <circle cx="84" cy="104" r="4.5" fill="var(--color-text-muted)" />
-            <circle cx="106" cy="24" r="4.5" fill="var(--color-text-muted)" />
-            <circle cx="128" cy="104" r="4.5" fill="var(--color-text-muted)" />
-            <circle cx="92" cy="68" r="4.5" fill="var(--color-text-muted)" />
-            <circle cx="120" cy="68" r="4.5" fill="var(--color-text-muted)" />
+            {/* ] bracket */}
+            <polyline
+              points="140,16 152,16 152,104 140,104"
+              stroke="var(--color-text)"
+              strokeWidth="5"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
           <span className={styles.logoText}>Miles Automation</span>
         </a>
