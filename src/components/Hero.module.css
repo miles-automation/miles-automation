@@ -1,0 +1,58 @@
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 80px;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(96, 165, 250, 0.08) 0%,
+    transparent 60%
+  );
+}
+
+.content {
+  max-width: var(--max-width);
+}
+
+.heading {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+
+.typed {
+  color: var(--color-primary);
+}
+
+.cursor {
+  animation: blink 0.8s step-end infinite;
+  color: var(--color-primary);
+  font-weight: 300;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.sub {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--color-text-muted);
+  max-width: 520px;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 85vh;
+  }
+}

@@ -1,0 +1,63 @@
+version = 1
+
+[project]
+key = "miles-automation"
+repo = "miles-automation/miles-automation"
+
+[staging]
+tier = "ephemeral"
+ttl_minutes = 60
+
+[staging.droplet]
+region = "nyc3"
+size = "s-1vcpu-1gb"
+image = "ubuntu-24-04-x64"
+
+[staging.hostname]
+mode = "sslip"
+
+[[services]]
+name = "app"
+image = "ghcr.io/miles-automation/miles-automation-app"
+container_port = 8000
+
+[[services.routes]]
+host = "{ephem_host}"
+path_prefix = "/"
+to = "app:8000"
+
+[database]
+kind = "sqlite"
+url = "sqlite:///./data/app.db"
+
+[secrets]
+source = "sparkswarm"
+project = "miles-automation"
+environment = "staging"
+required = []
+
+[[checks.pr]]
+type = "command"
+name = "make-check"
+run = "make check"
+
+[[checks.staging]]
+type = "http"
+name = "healthz"
+url = "http://{ephem_host}/healthz"
+expect_status = 200
+timeout_seconds = 5
+retries = 30
+retry_delay_seconds = 2
+
+[[checks.staging]]
+type = "http"
+name = "api-healthz-through-proxy"
+url = "http://{ephem_host}/api/v1/healthz"
+expect_status = 200
+
+[[checks.staging]]
+type = "http"
+name = "home-loads"
+url = "http://{ephem_host}/"
+expect_status = 200
