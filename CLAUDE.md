@@ -20,7 +20,7 @@ Vite + React + TypeScript consultancy landing page with a FastAPI backend. Singl
 ## Environment variables
 
 - `SPARK_SWARM_API_KEY` — required for fetching portfolio data from Spark Swarm
-- `SPARK_SWARM_API_URL` — defaults to `https://swarm.sparkswarm.com/api/v1`
+- `SPARK_SWARM_API_URL` — defaults to `https://sparkswarm.com/api/v1`
 
 ## Local dev
 
