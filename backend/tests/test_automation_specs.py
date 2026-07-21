@@ -16,6 +16,9 @@ def test_catalog_specs_are_executable_and_fingerprinted() -> None:
         spec = load_pdf_spec(SPECS / fixture["spec"])
         assert spec.slug == fixture["slug"]
         assert len(spec.fields) <= spec.limits.max_fields
+        assert spec.limits.max_total_pages == 100
+        assert spec.limits.max_fields == 8
+        assert spec.limits.max_layouts == 3
         assert len(spec.fingerprint) == 16
         fingerprints.add(spec.fingerprint)
     assert len(fingerprints) == len(catalog["fixtures"])

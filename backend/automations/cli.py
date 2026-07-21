@@ -20,17 +20,24 @@ def main(argv: list[str] | None = None) -> int:
     pdf.add_argument("--spec", type=Path, required=True)
     pdf.add_argument("--input", type=Path, required=True)
     pdf.add_argument("--output", type=Path, required=True)
+    pdf.add_argument("--layout-count", type=int, required=True)
     args = parser.parse_args(argv)
 
     try:
         if args.command == "pdf-run":
-            result = run_pdf_batch(load_pdf_spec(args.spec), args.input, args.output)
+            result = run_pdf_batch(
+                load_pdf_spec(args.spec),
+                args.input,
+                args.output,
+                layout_count=args.layout_count,
+            )
             print(  # noqa: T201
                 json.dumps(
                     {
                         "run_id": result.run_id,
                         "documents": result.documents,
                         "pages": result.pages,
+                        "layouts": result.layouts,
                         "required_exception_rate": result.required_exception_rate,
                         "acceptance_passed": result.acceptance_passed,
                         "elapsed_ms": result.elapsed_ms,

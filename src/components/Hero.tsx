@@ -6,14 +6,15 @@ export default function Hero() {
       <div className={`container ${styles.content}`}>
         <p className={styles.eyebrow}>Human-checked document extraction</p>
         <h1 className={styles.heading}>
-          Messy PDFs and scans,
+          Difficult PDFs,
           <br />
           <span>into checked data.</span>
         </h1>
         <p className={styles.sub}>
-          Send the documents ordinary extraction tools struggle with. We return
-          a checked spreadsheet, source-page references, and visible exceptions
-          after a free five-document preflight.
+          Send inconsistent PDFs with usable text layers. We return a checked
+          spreadsheet, source-page references, and visible exceptions. If your
+          samples are image-only scans, we quote the OCR or manual path
+          separately after preflight.
         </p>
         <div className={styles.buttons}>
           <a href="#offer" className="btn btn-primary">

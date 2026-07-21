@@ -26,6 +26,7 @@ from pypdf import PdfReader
 from backend.automations.spec import ExtractionField, PdfGigSpec
 
 FieldStatus = Literal["ok", "missing", "ambiguous", "invalid"]
+InputStatus = Literal["text_ready", "ocr_or_manual_review"]
 
 
 class AutomationError(RuntimeError):
@@ -52,6 +53,7 @@ class DocumentResult:
     source_file: str
     source_sha256: str
     page_count: int
+    input_status: InputStatus
     status: Literal["ok", "exceptions"]
     elapsed_ms: int
     fields: list[FieldResult]
@@ -64,6 +66,7 @@ class RunResult:
     manifest_path: Path
     documents: int
     pages: int
+    layouts: int
     required_exception_rate: float
     acceptance_passed: bool
     elapsed_ms: int
@@ -77,10 +80,14 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def read_pdf_pages(path: Path) -> list[PageText]:
+def read_pdf_pages(path: Path, max_pages: int) -> list[PageText]:
     reader = PdfReader(path)
     if reader.is_encrypted:
         raise AutomationError(f"encrypted PDF is out of scope: {path.name}")
+    if len(reader.pages) > max_pages:
+        raise AutomationError(
+            f"{path.name} has {len(reader.pages)} pages; limit is {max_pages}"
+        )
     return [
         PageText(page_number=index, text=page.extract_text() or "")
         for index, page in enumerate(reader.pages, start=1)
@@ -166,30 +173,33 @@ def extract_document(
     path: Path,
     spec: PdfGigSpec,
     *,
-    reader: Callable[[Path], list[PageText]] = read_pdf_pages,
+    reader: Callable[[Path, int], list[PageText]] = read_pdf_pages,
 ) -> DocumentResult:
     started = time.perf_counter()
-    pages = reader(path)
+    pages = reader(path, spec.limits.max_pages_per_document)
     if len(pages) > spec.limits.max_pages_per_document:
         raise AutomationError(
             f"{path.name} has {len(pages)} pages; limit is "
             f"{spec.limits.max_pages_per_document}"
         )
     extracted_characters = sum(len(page.text.strip()) for page in pages)
-    if extracted_characters < spec.limits.min_extracted_text_characters:
-        raise AutomationError(
-            f"{path.name} has no usable text layer; image-only scans need OCR "
-            "or manual review"
-        )
+    input_status: InputStatus = (
+        "text_ready"
+        if extracted_characters >= spec.limits.min_extracted_text_characters
+        else "ocr_or_manual_review"
+    )
     fields = [extract_field(pages, field) for field in spec.fields]
     required = {field.name for field in spec.fields if field.required}
-    has_exceptions = any(
-        result.status != "ok" and result.name in required for result in fields
-    ) or any(result.status in {"ambiguous", "invalid"} for result in fields)
+    has_exceptions = (
+        input_status != "text_ready"
+        or any(result.status != "ok" and result.name in required for result in fields)
+        or any(result.status in {"ambiguous", "invalid"} for result in fields)
+    )
     return DocumentResult(
         source_file=path.name,
         source_sha256=_sha256(path),
         page_count=len(pages),
+        input_status=input_status,
         status="exceptions" if has_exceptions else "ok",
         elapsed_ms=round((time.perf_counter() - started) * 1000),
         fields=fields,
@@ -211,6 +221,13 @@ def _excel_safe(
 ) -> str | int | float | bool | None:
     """Keep untrusted document text from becoming an Excel formula."""
     if isinstance(value, str) and value.startswith(("=", "+", "-", "@")):
+        if value.startswith(("+", "-")):
+            try:
+                Decimal(value)
+            except InvalidOperation:
+                pass
+            else:
+                return value
         return f"'{value}"
     return value
 
@@ -227,13 +244,20 @@ def _write_workbook(
     documents: list[DocumentResult],
     *,
     run_id: str,
+    layout_count: int,
     required_exception_rate: float,
     acceptance_passed: bool,
 ) -> None:
     workbook = Workbook()
     data = workbook.active
     data.title = spec.output.workbook_sheet
-    headers = ["source_file", "source_sha256", "page_count", "status"]
+    headers = [
+        "source_file",
+        "source_sha256",
+        "page_count",
+        "input_status",
+        "status",
+    ]
     for extraction_field in spec.fields:
         headers.append(extraction_field.name)
         if spec.output.include_source_page:
@@ -248,6 +272,7 @@ def _write_workbook(
             document.source_file,
             document.source_sha256,
             document.page_count,
+            document.input_status,
             document.status,
         ]
         for field_spec in spec.fields:
@@ -288,6 +313,7 @@ def _write_workbook(
     _append_safe(summary, ["spec_fingerprint", spec.fingerprint])
     _append_safe(summary, ["documents", len(documents)])
     _append_safe(summary, ["pages", sum(document.page_count for document in documents)])
+    _append_safe(summary, ["layouts", layout_count])
     _append_safe(summary, ["required_exception_rate", required_exception_rate])
     _append_safe(summary, ["acceptance_passed", acceptance_passed])
     _style_sheet(summary)
@@ -299,11 +325,16 @@ def run_pdf_batch(
     input_dir: str | Path,
     output_dir: str | Path,
     *,
-    reader: Callable[[Path], list[PageText]] = read_pdf_pages,
+    layout_count: int,
+    reader: Callable[[Path, int], list[PageText]] = read_pdf_pages,
 ) -> RunResult:
     started = time.perf_counter()
     started_at = datetime.now(timezone.utc)
     source_dir = Path(input_dir)
+    if layout_count < 1 or layout_count > spec.limits.max_layouts:
+        raise AutomationError(
+            f"batch declares {layout_count} layouts; limit is {spec.limits.max_layouts}"
+        )
     files = sorted(
         path for path in source_dir.iterdir() if path.suffix.lower() == ".pdf"
     )
@@ -350,6 +381,7 @@ def run_pdf_batch(
         spec,
         documents,
         run_id=run_id,
+        layout_count=layout_count,
         required_exception_rate=required_exception_rate,
         acceptance_passed=acceptance_passed,
     )
@@ -369,6 +401,7 @@ def run_pdf_batch(
         "summary": {
             "documents": len(documents),
             "pages": total_pages,
+            "layouts": layout_count,
             "required_exceptions": required_exceptions,
             "required_exception_rate": required_exception_rate,
             "acceptance_passed": acceptance_passed,
@@ -384,6 +417,7 @@ def run_pdf_batch(
         manifest_path=manifest_path,
         documents=len(documents),
         pages=total_pages,
+        layouts=layout_count,
         required_exception_rate=required_exception_rate,
         acceptance_passed=acceptance_passed,
         elapsed_ms=elapsed_ms,

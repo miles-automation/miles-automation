@@ -8,13 +8,14 @@ const INCLUDED = [
 ];
 
 const GOOD_FIT = [
-  "Scanned forms, low-quality text layers, or inconsistent exports",
+  "Inconsistent layouts, low-quality but usable text layers, or exports",
   "A stable set of fields you need across the batch",
   "Work where traceability matters more than a black-box answer",
 ];
 
 const NOT_A_FIT = [
   "Clean, uniform invoices a self-serve extractor already handles",
+  "Image-only scans without an agreed OCR or manual path",
   "Unreadable handwriting or open-ended table reconstruction",
   "Sensitive or regulated data without an approved handling plan",
 ];
@@ -40,9 +41,9 @@ export default function Services() {
             <h3>Messy documents &rarr; checked spreadsheet</h3>
             <p className={styles.price}>$149 pilot</p>
             <p className={styles.desc}>
-              Send scanned forms, inconsistent PDFs, or exports that defeated
-              the usual copy-and-paste workflow. Get your requested columns back
-              with ambiguous values flagged instead of guessed.
+              Send inconsistent PDFs or exports that defeated the usual
+              copy-and-paste workflow. Get your requested columns back with
+              ambiguous values flagged instead of guessed.
             </p>
             <ul className={styles.bullets}>
               {INCLUDED.map((item) => (
@@ -50,9 +51,10 @@ export default function Services() {
               ))}
             </ul>
             <p className={styles.note}>
-              Start with five representative documents. We confirm legibility,
+              Start with five representative documents. We confirm usable text,
               layout count, field feasibility, and security fit before asking
-              you to commit. Difficult handwriting, complex tables, and
+              you to commit. Image-only scans need a separately agreed OCR or
+              manual path; difficult handwriting, complex tables, and
               out-of-scope material may be declined or separately quoted.
             </p>
             <a

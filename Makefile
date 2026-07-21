@@ -56,10 +56,12 @@ contract-check:
 	@python3 scripts/check_contract.py
 
 gig-pdf-run:
+	@test -n "$(LAYOUTS)" || (echo "LAYOUTS is required (1-3)" && exit 2)
 	@cd backend && PYTHONPATH=.. uv run python -m backend.automations.cli pdf-run \
 		--spec $(or $(SPEC),gig_specs/pdf/property-records.json) \
 		--input $(or $(INPUT),incoming) \
-		--output $(or $(OUTPUT),deliveries)
+		--output $(or $(OUTPUT),deliveries) \
+		--layout-count $(LAYOUTS)
 
 check:
 	@$(MAKE) lint

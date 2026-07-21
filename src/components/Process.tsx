@@ -9,7 +9,7 @@ const STEPS = [
   {
     number: "02",
     title: "We preflight the batch",
-    desc: "We confirm legibility, layouts, fields, security fit, price, and deadline before payment.",
+    desc: "We confirm usable text, layouts, fields, security fit, price, and deadline before payment.",
   },
   {
     number: "03",

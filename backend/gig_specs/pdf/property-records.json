@@ -11,10 +11,11 @@
     "advertised_budget_usd": 50
   },
   "limits": {
-    "max_documents": 200,
-    "max_total_pages": 300,
+    "max_documents": 100,
+    "max_total_pages": 100,
     "max_pages_per_document": 10,
-    "max_fields": 12,
+    "max_fields": 8,
+    "max_layouts": 3,
     "min_extracted_text_characters": 20
   },
   "acceptance": {

@@ -7,7 +7,9 @@ from openpyxl import load_workbook
 from backend.automations.pdf_batch import (
     AutomationError,
     PageText,
+    _excel_safe,
     extract_field,
+    read_pdf_pages,
     run_pdf_batch,
 )
 from backend.automations.spec import load_pdf_spec
@@ -46,8 +48,9 @@ def test_run_writes_delivery_workbook_and_audit_manifest(tmp_path: Path) -> None
     source = incoming / "record-001.pdf"
     source.write_bytes(b"fixture bytes")
 
-    def fake_reader(path: Path) -> list[PageText]:
+    def fake_reader(path: Path, max_pages: int) -> list[PageText]:
         assert path == source
+        assert max_pages == 10
         return [
             PageText(
                 1,
@@ -62,9 +65,16 @@ def test_run_writes_delivery_workbook_and_audit_manifest(tmp_path: Path) -> None
             )
         ]
 
-    result = run_pdf_batch(_property_spec(), incoming, outgoing, reader=fake_reader)
+    result = run_pdf_batch(
+        _property_spec(),
+        incoming,
+        outgoing,
+        layout_count=1,
+        reader=fake_reader,
+    )
     assert result.documents == 1
     assert result.pages == 1
+    assert result.layouts == 1
     assert result.acceptance_passed is True
     assert result.required_exception_rate == 0.0
 
@@ -92,7 +102,8 @@ def test_required_exception_fails_acceptance_but_still_delivers(tmp_path: Path) 
         _property_spec(),
         incoming,
         tmp_path / "outgoing",
-        reader=lambda _path: [
+        layout_count=1,
+        reader=lambda _path, _max_pages: [
             PageText(1, "Parcel ID: 12-345\nDocument notes: enough text")
         ],
     )
@@ -115,22 +126,31 @@ def test_document_limit_is_enforced_before_extraction(tmp_path: Path) -> None:
             payload,
             incoming,
             tmp_path / "outgoing",
-            reader=lambda _path: [PageText(1, "")],
+            layout_count=1,
+            reader=lambda _path, _max_pages: [PageText(1, "")],
         )
 
 
-def test_image_only_pdf_is_rejected_for_ocr_or_review(tmp_path: Path) -> None:
+def test_image_only_pdf_is_marked_for_ocr_or_review(tmp_path: Path) -> None:
     incoming = tmp_path / "incoming"
     incoming.mkdir()
     (incoming / "scan.pdf").write_bytes(b"scan")
 
-    with pytest.raises(AutomationError, match="image-only scans need OCR"):
-        run_pdf_batch(
-            _property_spec(),
-            incoming,
-            tmp_path / "outgoing",
-            reader=lambda _path: [PageText(1, "")],
-        )
+    result = run_pdf_batch(
+        _property_spec(),
+        incoming,
+        tmp_path / "outgoing",
+        layout_count=1,
+        reader=lambda _path, _max_pages: [PageText(1, "")],
+    )
+
+    assert result.acceptance_passed is False
+    assert result.required_exception_rate == 1.0
+    workbook = load_workbook(result.workbook_path)
+    sheet = workbook["Property Records"]
+    headers = [cell.value for cell in sheet[1]]
+    row = dict(zip(headers, [cell.value for cell in sheet[2]], strict=True))
+    assert row["input_status"] == "ocr_or_manual_review"
 
 
 def test_workbook_escapes_formula_like_document_values(tmp_path: Path) -> None:
@@ -142,7 +162,8 @@ def test_workbook_escapes_formula_like_document_values(tmp_path: Path) -> None:
         _property_spec(),
         incoming,
         tmp_path / "outgoing",
-        reader=lambda _path: [
+        layout_count=1,
+        reader=lambda _path, _max_pages: [
             PageText(
                 1,
                 "\n".join(
@@ -161,3 +182,43 @@ def test_workbook_escapes_formula_like_document_values(tmp_path: Path) -> None:
     headers = [cell.value for cell in sheet[1]]
     row = dict(zip(headers, [cell.value for cell in sheet[2]], strict=True))
     assert row["address"].startswith("'=HYPERLINK")
+
+
+def test_workbook_safety_preserves_signed_numeric_strings() -> None:
+    assert _excel_safe("-500.00") == "-500.00"
+    assert _excel_safe("+12") == "+12"
+    assert _excel_safe("-1+cmd") == "'-1+cmd"
+
+
+def test_layout_limit_is_enforced(tmp_path: Path) -> None:
+    incoming = tmp_path / "incoming"
+    incoming.mkdir()
+    (incoming / "record.pdf").write_bytes(b"fixture")
+
+    with pytest.raises(AutomationError, match="declares 4 layouts; limit is 3"):
+        run_pdf_batch(
+            _property_spec(),
+            incoming,
+            tmp_path / "outgoing",
+            layout_count=4,
+            reader=lambda _path, _max_pages: [PageText(1, "")],
+        )
+
+
+def test_page_limit_is_checked_before_text_extraction(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    class ExplodingPage:
+        def extract_text(self) -> str:
+            raise AssertionError("text extraction must not run")
+
+    class OversizedReader:
+        is_encrypted = False
+        pages = [ExplodingPage(), ExplodingPage()]
+
+    monkeypatch.setattr(
+        "backend.automations.pdf_batch.PdfReader", lambda _path: OversizedReader()
+    )
+
+    with pytest.raises(AutomationError, match="has 2 pages; limit is 1"):
+        read_pdf_pages(tmp_path / "oversized.pdf", max_pages=1)

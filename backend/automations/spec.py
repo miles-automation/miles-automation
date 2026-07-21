@@ -27,6 +27,7 @@ class BatchLimits(BaseModel):
     max_total_pages: int = Field(gt=0, le=100_000)
     max_pages_per_document: int = Field(gt=0, le=10_000)
     max_fields: int = Field(gt=0, le=100)
+    max_layouts: int = Field(gt=0, le=100)
     min_extracted_text_characters: int = Field(default=20, ge=0, le=100_000)
 
 

@@ -4,14 +4,15 @@ import App from "../App";
 describe("App", () => {
   it("renders the hero heading", () => {
     render(<App />);
-    expect(screen.getByText(/Messy PDFs and scans/)).toBeInTheDocument();
+    expect(screen.getByText(/Difficult PDFs/)).toBeInTheDocument();
   });
 
-  it("renders the proof section", () => {
+  it("does not render an uncurated portfolio", () => {
     render(<App />);
     expect(
-      screen.getByRole("heading", { name: "Systems behind the service" }),
-    ).toBeInTheDocument();
+      screen.queryByText(/Systems behind the service/),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/Bullshit or Fit/)).not.toBeInTheDocument();
   });
 
   it("renders the bounded document pilot", () => {
@@ -24,6 +25,7 @@ describe("App", () => {
     expect(screen.getAllByText("$149 pilot")).toHaveLength(2);
     expect(screen.getByText(/Up to 100 total pages/)).toBeInTheDocument();
     expect(screen.queryByText(/lead list/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/image-only scans need/i)).toBeInTheDocument();
   });
 
   it("requires a preflight before payment", () => {
