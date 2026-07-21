@@ -1,45 +1,86 @@
 import styles from "./Services.module.css";
 
-const SERVICES = [
-  {
-    title: "Agentic AI Systems",
-    desc: "LLM orchestration, multi-step reasoning, and autonomous workflows. We design AI systems that do real work — not just chatbots.",
-    example: "Spark Swarm fleet ops, automated uptime monitoring",
-  },
-  {
-    title: "Full-Stack Product Development",
-    desc: "React + FastAPI + Postgres apps shipped in Docker containers with CI/CD, health checks, and zero-downtime deploys.",
-    example: "IEOMD, Human Index, Esher's Codex",
-  },
-  {
-    title: "Developer Tooling & Extensions",
-    desc: "VS Code extensions, CLI tools, and AI copilots that integrate into existing workflows without disruption.",
-    example: "Code Loom VS Code extension",
-  },
-  {
-    title: "Infrastructure & DevOps",
-    desc: "Docker Compose fleets, Caddy reverse proxy, automated deployments, secrets management, and production monitoring.",
-    example: "Platform infrastructure running 10+ services",
-  },
+const INCLUDED = [
+  "Up to 100 total pages across the accepted batch",
+  "Up to 8 requested fields and 3 recurring document layouts",
+  "Source-page references and a visible exception report",
+  "Excel or CSV delivery with one correction pass",
+];
+
+const GOOD_FIT = [
+  "Scanned forms, low-quality text layers, or inconsistent exports",
+  "A stable set of fields you need across the batch",
+  "Work where traceability matters more than a black-box answer",
+];
+
+const NOT_A_FIT = [
+  "Clean, uniform invoices a self-serve extractor already handles",
+  "Unreadable handwriting or open-ended table reconstruction",
+  "Sensitive or regulated data without an approved handling plan",
 ];
 
 export default function Services() {
   return (
-    <section id="services">
+    <section id="offer">
       <div className="container">
-        <h2>Services</h2>
+        <p className={styles.kicker}>One bounded pilot</p>
+        <h2>Use us for the documents the easy tools miss</h2>
         <p className="section-intro">
-          We take projects from concept to production. Here&apos;s what we bring
-          to the table.
+          The pilot begins only after we inspect five representative documents
+          and confirm the batch can be delivered safely at the published price.
         </p>
-        <div className={styles.grid}>
-          {SERVICES.map((s) => (
-            <div key={s.title} className={styles.card}>
-              <h3>{s.title}</h3>
-              <p className={styles.desc}>{s.desc}</p>
-              <span className={styles.example}>e.g. {s.example}</span>
+        <div className={styles.offerLayout}>
+          <article className={styles.card}>
+            <div className={styles.cardTopline}>
+              <span className={styles.badge}>Hard-case document batch</span>
+              <span className={styles.turnaround}>
+                2 business days after acceptance
+              </span>
             </div>
-          ))}
+            <h3>Messy documents &rarr; checked spreadsheet</h3>
+            <p className={styles.price}>$149 pilot</p>
+            <p className={styles.desc}>
+              Send scanned forms, inconsistent PDFs, or exports that defeated
+              the usual copy-and-paste workflow. Get your requested columns back
+              with ambiguous values flagged instead of guessed.
+            </p>
+            <ul className={styles.bullets}>
+              {INCLUDED.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <p className={styles.note}>
+              Start with five representative documents. We confirm legibility,
+              layout count, field feasibility, and security fit before asking
+              you to commit. Difficult handwriting, complex tables, and
+              out-of-scope material may be declined or separately quoted.
+            </p>
+            <a
+              className={styles.cta}
+              href="mailto:info@milesautomation.com?subject=Five-document%20preflight"
+            >
+              Send 5 samples for preflight &rarr;
+            </a>
+          </article>
+
+          <aside className={styles.fitCard} aria-label="Pilot fit guide">
+            <div>
+              <p className={styles.fitLabel}>Good fit</p>
+              <ul className={styles.fitList}>
+                {GOOD_FIT.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className={`${styles.fitLabel} ${styles.notFit}`}>Not a fit</p>
+              <ul className={styles.fitList}>
+                {NOT_A_FIT.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </aside>
         </div>
       </div>
     </section>

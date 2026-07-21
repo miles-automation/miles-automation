@@ -47,9 +47,10 @@ export default function Portfolio() {
   return (
     <section id="portfolio">
       <div className="container">
-        <h2>Portfolio</h2>
+        <h2>Systems behind the service</h2>
         <p className="section-intro">
-          Real products we&apos;ve built and operate &mdash; not mockups.
+          The offers are new. The production, automation, and data-engineering
+          experience behind them is not.
           {source === "live" && (
             <span className={styles.liveBadge}> Live data</span>
           )}

@@ -4,22 +4,22 @@ export default function About() {
   return (
     <section id="about">
       <div className="container">
-        <h2>About</h2>
+        <h2>Built from the work backward</h2>
         <p className={styles.intro}>
-          Miles Automation is a one-person product studio and consultancy. We
-          build AI-driven software products from scratch and operate them in
-          production — not as demos, but as real services with real users.
+          Miles Automation turns difficult document-conversion jobs into a
+          dependable, productized service. We begin with the actual batch,
+          fulfill it end to end, and automate the slowest steps as evidence
+          accumulates.
         </p>
         <p className={styles.intro}>
-          Our stack is opinionated: React, FastAPI, Postgres, Docker, Caddy. We
-          deploy to our own infrastructure, monitor uptime, ship migrations, and
-          iterate fast. Every project in the portfolio is live, running, and
-          maintained.
+          The result is deliberately less magical than most AI pitches: fixed
+          scope, visible exceptions, source-linked outputs, and a human who is
+          accountable for the final spreadsheet.
         </p>
         <p className={styles.intro}>
-          If you need a team of 20 and a 6-month roadmap, we&apos;re probably
-          not the right fit. If you need someone who can take an idea from
-          napkin sketch to production URL in weeks, let&apos;s talk.
+          When a pilot repeats, the automation becomes standing infrastructure.
+          Until then, you are buying the completed job—not a platform rollout or
+          another monthly software seat.
         </p>
         <div className={styles.links}>
           <a

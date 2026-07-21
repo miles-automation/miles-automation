@@ -15,3 +15,23 @@
   font-size: 1.125rem;
   font-weight: 500;
 }
+
+.actions {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.email {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem !important;
+  margin-top: 1.5rem;
+}
+
+.caution {
+  border-left: 2px solid var(--color-border);
+  font-size: 0.8125rem;
+  margin-top: 1.5rem;
+  padding-left: 1rem;
+}

@@ -1,36 +1,168 @@
-.grid {
+.offerLayout {
+  align-items: stretch;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.75fr);
+  gap: 1.5rem;
+}
+
+.kicker {
+  color: var(--color-primary);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
 }
 
 .card {
-  padding: 1.5rem;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 10px;
-  transition: border-color 0.2s;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
 }
 
 .card:hover {
   border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.cardTopline {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.badge {
+  background: rgba(96, 165, 250, 0.12);
+  border: 1px solid rgba(96, 165, 250, 0.24);
+  border-radius: 999px;
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+}
+
+.turnaround {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
 }
 
 .card h3 {
-  margin-bottom: 0.625rem;
-  font-size: 1.0625rem;
+  font-size: 1.45rem;
+  margin-bottom: 0.35rem;
+}
+
+.price {
+  color: var(--color-primary);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin-bottom: 1.15rem;
 }
 
 .desc {
   color: var(--color-text-muted);
   font-size: 0.9375rem;
   line-height: 1.6;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
 }
 
-.example {
-  display: block;
-  font-size: 0.8125rem;
+.bullets {
+  display: grid;
+  gap: 0.65rem;
+  list-style: none;
+  margin-bottom: 1.25rem;
+}
+
+.bullets li {
+  color: var(--color-text);
+  font-size: 0.875rem;
+  padding-left: 1.25rem;
+  position: relative;
+}
+
+.bullets li::before {
   color: var(--color-primary);
-  font-style: italic;
+  content: "•";
+  left: 0;
+  position: absolute;
+}
+
+.note {
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  margin-bottom: 1.5rem;
+  padding-top: 1rem;
+}
+
+.cta {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin-top: auto;
+}
+
+.fitCard {
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  display: grid;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.fitLabel {
+  color: var(--color-primary);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.9rem;
+  text-transform: uppercase;
+}
+
+.notFit {
+  color: var(--color-text-muted);
+}
+
+.fitList {
+  display: grid;
+  gap: 0.85rem;
+  list-style: none;
+}
+
+.fitList li {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  padding-left: 1.25rem;
+  position: relative;
+}
+
+.fitList li::before {
+  color: var(--color-primary);
+  content: "•";
+  left: 0;
+  position: absolute;
+}
+
+@media (max-width: 760px) {
+  .offerLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+
+  .fitCard {
+    padding: 1.5rem;
+  }
 }

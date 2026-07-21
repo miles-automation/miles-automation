@@ -76,7 +76,9 @@ async def get_sparks():
 # SPA catch-all (when static dir exists from Docker build)
 STATIC_DIR = Path(__file__).parent / "static"
 if STATIC_DIR.exists():
-    app.mount("/assets", StaticFiles(directory=str(STATIC_DIR / "assets")), name="assets")
+    app.mount(
+        "/assets", StaticFiles(directory=str(STATIC_DIR / "assets")), name="assets"
+    )
 
     @app.get("/{full_path:path}")
     async def serve_spa(full_path: str):

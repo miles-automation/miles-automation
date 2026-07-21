@@ -4,16 +4,26 @@ export default function Contact() {
   return (
     <section id="contact">
       <div className="container">
-        <h2>Start a Project</h2>
+        <h2>Request a pilot</h2>
         <div className={styles.content}>
           <p>
-            Have an idea that needs building? A system that needs AI wired in?
-            An existing product that needs to ship faster? Reach out and
-            let&apos;s figure out if we&apos;re a good fit.
+            Email five representative documents and the columns you need.
+            We&apos;ll confirm whether the batch fits the pilot before you pay
+            or send the remaining files.
           </p>
-          <a href="mailto:info@milesautomation.com" className={styles.mailto}>
-            info@milesautomation.com &rarr;
-          </a>
+          <div className={styles.actions}>
+            <a
+              href="mailto:info@milesautomation.com?subject=Five-document%20preflight"
+              className={styles.mailto}
+            >
+              Send 5 samples &rarr;
+            </a>
+          </div>
+          <p className={styles.caution}>
+            Please redact sensitive information from the samples where possible.
+            Do not email regulated data before we agree on a handling plan.
+          </p>
+          <p className={styles.email}>info@milesautomation.com</p>
         </div>
       </div>
     </section>
