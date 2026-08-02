@@ -49,7 +49,9 @@ export default function Portfolio() {
       <div className="container">
         <h2>Portfolio</h2>
         <p className="section-intro">
-          Real products we&apos;ve built and operate &mdash; not mockups.
+          This is the fleet behind the offer: roughly ten production services I
+          build and operate myself. The names are different; the delivery system
+          is the common thread.
           {source === "live" && (
             <span className={styles.liveBadge}> Live data</span>
           )}

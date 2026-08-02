@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import styles from "./Header.module.css";
 
 const NAV_LINKS = [
+  { href: "#services", label: "The offer" },
+  { href: "#about", label: "How I work" },
   { href: "#portfolio", label: "Portfolio" },
-  { href: "#services", label: "Services" },
-  { href: "#about", label: "About" },
-  { href: "#contact", label: "Contact" },
+  { href: "#contact", label: "Intake" },
 ];
 
 export default function Header() {

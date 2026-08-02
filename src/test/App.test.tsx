@@ -4,7 +4,7 @@ import App from "../App";
 describe("App", () => {
   it("renders the hero heading", () => {
     render(<App />);
-    expect(screen.getByText(/Build & Ship/)).toBeInTheDocument();
+    expect(screen.getByText(/Ship AI-written code/)).toBeInTheDocument();
   });
 
   it("renders the portfolio section", () => {
@@ -14,13 +14,16 @@ describe("App", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders the services section", () => {
+  it("renders the offer section", () => {
     render(<App />);
-    expect(screen.getByText("Agentic AI Systems")).toBeInTheDocument();
+    expect(screen.getByText("Pipeline audit")).toBeInTheDocument();
   });
 
-  it("renders the contact email", () => {
+  it("renders the intake form", () => {
     render(<App />);
-    expect(screen.getByText(/info@milesautomation\.com/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Talk through your pipeline" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "Name" })).toBeInTheDocument();
   });
 });
