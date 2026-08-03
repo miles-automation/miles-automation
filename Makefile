@@ -29,9 +29,13 @@ frontend-server:
 
 test:
 	@$(MAKE) test-frontend
+	@$(MAKE) test-backend
 
 test-frontend:
 	@npm run test
+
+test-backend:
+	@cd backend && uv run pytest
 
 lint:
 	@npm run lint

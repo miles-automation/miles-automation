@@ -21,16 +21,16 @@
   font-size: 1.0625rem;
 }
 
+.timing {
+  display: block;
+  color: var(--color-primary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
 .desc {
   color: var(--color-text-muted);
   font-size: 0.9375rem;
   line-height: 1.6;
-  margin-bottom: 0.75rem;
-}
-
-.example {
-  display: block;
-  font-size: 0.8125rem;
-  color: var(--color-primary);
-  font-style: italic;
 }

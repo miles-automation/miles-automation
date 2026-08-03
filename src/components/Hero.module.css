@@ -21,31 +21,8 @@
   margin-bottom: 1.5rem;
 }
 
-.typedWrap {
-  display: inline-grid;
-}
-
-.sizer {
-  visibility: hidden;
-  grid-area: 1 / 1;
+.accent {
   color: var(--color-primary);
-}
-
-.typed {
-  grid-area: 1 / 1;
-  color: var(--color-primary);
-}
-
-.cursor {
-  animation: blink 0.8s step-end infinite;
-  color: var(--color-primary);
-  font-weight: 300;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
 }
 
 .sub {
@@ -65,13 +42,5 @@
 @media (max-width: 768px) {
   .hero {
     min-height: 85vh;
-  }
-
-  .sizer {
-    display: none;
-  }
-
-  .typedWrap {
-    display: inline;
   }
 }
