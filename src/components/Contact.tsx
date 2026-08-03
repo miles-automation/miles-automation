@@ -27,9 +27,9 @@ export default function Contact() {
         <h2>Talk through your pipeline</h2>
         <div className={styles.content}>
           <p>
-            Tell me what shipping looks like today, where it gets painful, and
-            how coding agents fit into the picture. I&apos;ll reply with whether
-            an audit, install, or ongoing operation makes sense.
+            Tell me how shipping works today and where it hurts. If coding
+            agents are in the mix, say so. I&apos;ll write back with which of
+            the three makes sense for you, or tell you if none of them do.
           </p>
           <LeadForm />
         </div>
@@ -155,7 +155,8 @@ function LeadForm() {
         {status === "submitting" ? "Sending…" : "Send the details"}
       </button>
       <div className={styles.status} aria-live="polite" role="status">
-        {status === "success" && "Thanks — I’ll read this and get back to you."}
+        {status === "success" &&
+          "Thanks. I read these myself and will get back to you."}
         {status === "error" && errorMessage}
       </div>
     </form>

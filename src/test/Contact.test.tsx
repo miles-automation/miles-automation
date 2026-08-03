@@ -30,7 +30,7 @@ describe("Contact lead form", () => {
 
     await waitFor(() => {
       expect(screen.getByRole("status")).toHaveTextContent(
-        "Thanks — I’ll read this and get back to you.",
+        "Thanks. I read these myself and will get back to you.",
       );
     });
     expect(fetchMock).toHaveBeenCalledWith(
