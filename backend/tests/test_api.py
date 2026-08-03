@@ -169,5 +169,33 @@ class LeadApiTests(unittest.TestCase):
                 self.assertEqual(self.client.get(path).status_code, 404)
 
 
+    def test_sparks_endpoint_hides_ideas_and_archived_projects(self) -> None:
+        # The endpoint is public. Serving every spark published the whole idea
+        # list to anyone who called it directly, even though the page hid them.
+        upstream = {
+            "sparks": [
+                {"name": "Shipped", "slug": "shipped", "stage": "live", "description": "real"},
+                {"name": "WIP", "slug": "wip", "stage": "building", "description": "real"},
+                {"name": "Someday", "slug": "someday", "stage": "idea", "description": "secret plan"},
+                {"name": "Dead", "slug": "dead", "stage": "archived", "description": "abandoned"},
+            ]
+        }
+        mock_client = AsyncMock()
+        mock_client.get.return_value = httpx.Response(
+            200,
+            json=upstream,
+            request=httpx.Request("GET", "https://sparkswarm.com/api/v1/sparks"),
+        )
+
+        with patch.object(backend_main, "_http_client", mock_client):
+            with patch.object(backend_main.settings, "spark_swarm_api_key", "test-key"):
+                response = self.client.get("/api/v1/sparks")
+
+        slugs = [s["slug"] for s in response.json()["sparks"]]
+        self.assertEqual(slugs, ["shipped", "wip"])
+        self.assertNotIn("secret plan", response.text)
+        self.assertNotIn("abandoned", response.text)
+
+
 if __name__ == "__main__":
     unittest.main()
