@@ -4,7 +4,7 @@ const SERVICES = [
   {
     title: "Pipeline audit",
     timing: "About a week · fixed fee",
-    desc: "We trace where releases actually break: tests, migrations, deploys, health checks, secrets, and handoffs. You get a written order of operations the team can act on with or without me.",
+    desc: "I trace where releases actually break: tests, migrations, deploys, health checks, secrets, and handoffs. You get a written order of operations the team can act on with or without me.",
   },
   {
     title: "Pipeline install",
