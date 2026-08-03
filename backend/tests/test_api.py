@@ -158,5 +158,16 @@ class LeadApiTests(unittest.TestCase):
         self.assertEqual(backend_main._request_client_ip(request), "203.0.113.42")
 
 
+    def test_interactive_docs_are_closed_by_default(self) -> None:
+        # Neither container sets ENVIRONMENT, so the default decides production
+        # behaviour. It defaulted to "dev" and shipped /docs open to the internet.
+        from backend.config import Settings
+
+        self.assertEqual(Settings().environment, "prod")
+        for path in ("/docs", "/redoc", "/openapi.json"):
+            with self.subTest(path=path):
+                self.assertEqual(self.client.get(path).status_code, 404)
+
+
 if __name__ == "__main__":
     unittest.main()
