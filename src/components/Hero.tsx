@@ -9,8 +9,8 @@ export default function Hero() {
         </h1>
         <p className={styles.sub}>
           I install the delivery pipeline that builds, tests, deploys, monitors,
-          and rolls back automatically. I run one myself &mdash; ten production
-          services, one operator.
+          and rolls back automatically. I run one myself for about ten
+          production services.
         </p>
         <div className={styles.buttons}>
           <a href="#contact" className="btn btn-primary">

@@ -9,12 +9,12 @@ const SERVICES = [
   {
     title: "Pipeline install",
     timing: "A few weeks",
-    desc: "I install merge-to-production automation, migrations, health checks, automatic rollback, uptime monitoring, alerting, API-managed secrets, and an agent workflow with review gates people will follow.",
+    desc: "I build the merge-to-production automation: migrations, health checks, automatic rollback, uptime monitoring, alerting, secrets handled through an API, and an agent workflow with review gates your team will actually follow.",
   },
   {
     title: "Run it",
     timing: "Monthly",
-    desc: "I operate the pipeline after it is in place: upgrades, monitoring, incident response, and the boring maintenance nobody staffs but every production service needs.",
+    desc: "I run the pipeline once it is in place: upgrades, monitoring, incident response, and the maintenance work that usually gets skipped until something breaks.",
   },
 ];
 
@@ -24,8 +24,8 @@ export default function Services() {
       <div className="container">
         <h2>The offer</h2>
         <p className="section-intro">
-          One delivery system, three ways to start. I can find the failure
-          points, install the safety net, or keep it running.
+          Three ways to start on the same delivery system. Find out what breaks,
+          get it built, or hand me the running of it.
         </p>
         <div className={styles.grid}>
           {SERVICES.map((s) => (

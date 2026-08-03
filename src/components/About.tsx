@@ -6,21 +6,19 @@ export default function About() {
       <div className="container">
         <h2>How I work</h2>
         <p className={styles.intro}>
-          I run Miles Automation as a one-person operation. The proof for this
-          offer is the fleet itself: roughly ten production services &mdash;
-          including IEOMD, Human Index, Esher&apos;s Codex, Noodle, Spark Swarm,
-          and this site &mdash; operated by one person.
+          I run Miles Automation on my own. About ten production services use
+          this pipeline right now, including IEOMD, Human Index, Esher&apos;s
+          Codex, Noodle, and Spark Swarm. This site uses it too.
         </p>
         <p className={styles.intro}>
-          The delivery path is concrete: a merge builds the image, runs
-          migrations, health-checks through the reverse proxy, and rolls back
-          automatically when the check fails. Uptime probes alert a chat room,
-          and secrets come through an API rather than pasted <code>.env</code>
-          files.
+          A merge builds the image, runs migrations, health-checks the service
+          through the reverse proxy, and rolls back automatically if that check
+          fails. Uptime probes alert a chat room. Secrets come from an API
+          instead of hand-edited <code>.env</code> files.
         </p>
         <div className={styles.proofGrid}>
           <div>
-            <h3>Every change has a boundary</h3>
+            <h3>How changes get reviewed</h3>
             <p>
               Claude and Codex work against real repositories with separate
               machine identities, isolated git worktrees, and one PR per change.
@@ -28,11 +26,11 @@ export default function About() {
             </p>
           </div>
           <div>
-            <h3>Every release has a way back</h3>
+            <h3>How releases roll back</h3>
             <p>
               The deployment checks the service through the same reverse proxy
-              users reach. If that check fails, the release rolls back instead
-              of leaving a broken build in production.
+              your users hit. If that check fails, the release rolls back on its
+              own and the previous version keeps serving.
             </p>
           </div>
         </div>
@@ -40,9 +38,9 @@ export default function About() {
           <div>
             <h3>Good fit</h3>
             <p>
-              Teams whose deploys are manual, scary, or slower than their code
-              output &mdash; especially teams adopting coding agents without a
-              safety net.
+              Teams whose deploys are manual, scary, or slower than the code
+              they are writing. Especially teams picking up coding agents
+              without a safety net.
             </p>
           </div>
           <div>
