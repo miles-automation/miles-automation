@@ -12,6 +12,10 @@ from backend.config import settings
 from backend.lead_schemas import LeadRequest
 
 _http_client: httpx.AsyncClient | None = None
+
+# The only stages that represent shipped, operable work. Everything else is an
+# idea or a dead project and has no business on a page selling delivery pipelines.
+PORTFOLIO_STAGES = {"live", "building"}
 MAX_REQUEST_BODY_BYTES = 64 * 1024
 LEAD_RATE_LIMIT = 5
 LEAD_RATE_WINDOW_SECONDS = 60 * 60
@@ -189,7 +193,10 @@ async def get_sparks():
         return JSONResponse({"sparks": [], "source": "fallback"})
 
     sparks = resp.json().get("sparks", [])
-    # Return only the fields the frontend needs
+    # Filter here, not in the browser. This endpoint is public, and the upstream
+    # list is every spark on the account: unbuilt ideas, abandoned projects, and
+    # their descriptions. The page only ever renders shipped work, so serving the
+    # rest just published a roadmap to anyone who called the endpoint directly.
     filtered = [
         {
             "name": s.get("name"),
@@ -200,6 +207,7 @@ async def get_sparks():
             "health": s.get("health"),
         }
         for s in sparks
+        if s.get("stage") in PORTFOLIO_STAGES
     ]
     return JSONResponse({"sparks": filtered, "source": "live"})
 
