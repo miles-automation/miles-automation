@@ -1,0 +1,252 @@
+import json
+from pathlib import Path
+
+import pytest
+from openpyxl import load_workbook
+
+from backend.automations.pdf_batch import (
+    AutomationError,
+    PageText,
+    _excel_safe,
+    extract_field,
+    read_pdf_pages,
+    run_pdf_batch,
+)
+from backend.automations.spec import PdfGigSpec, load_pdf_spec
+
+SPECS = Path(__file__).parents[1] / "gig_specs"
+
+
+def _property_spec() -> PdfGigSpec:
+    return load_pdf_spec(SPECS / "pdf/property-records.json")
+
+
+def test_extract_field_preserves_page_provenance_and_normalizes() -> None:
+    spec = load_pdf_spec(SPECS / "pdf/fuel-delivery-invoices.json")
+    date_field = next(field for field in spec.fields if field.name == "delivery_date")
+    result = extract_field(
+        [PageText(1, "Invoice No: A-10"), PageText(2, "Delivery Date: 07/20/2026")],
+        date_field,
+    )
+    assert result.value == "2026-07-20"
+    assert result.status == "ok"
+    assert result.source_pages == [2]
+
+
+def test_distinct_values_are_flagged_as_ambiguous() -> None:
+    field = _property_spec().fields[0]
+    result = extract_field([PageText(1, "Parcel ID: ABC-1\nParcel ID: ABC-2")], field)
+    assert result.status == "ambiguous"
+    assert result.value is None
+    assert "ABC-1" in (result.detail or "")
+
+
+def test_run_writes_delivery_workbook_and_audit_manifest(tmp_path: Path) -> None:
+    incoming = tmp_path / "incoming"
+    outgoing = tmp_path / "outgoing"
+    incoming.mkdir()
+    source = incoming / "record-001.pdf"
+    source.write_bytes(b"fixture bytes")
+
+    def fake_reader(path: Path, max_pages: int) -> list[PageText]:
+        assert path == source
+        assert max_pages == 10
+        return [
+            PageText(
+                1,
+                "\n".join(
+                    [
+                        "Parcel ID: 12-345-678",
+                        "Property Address: 10 Main St",
+                        "City: Royal Oak",
+                        "Interested Parties: Jane Doe; Acme Bank",
+                    ]
+                ),
+            )
+        ]
+
+    result = run_pdf_batch(
+        _property_spec(),
+        incoming,
+        outgoing,
+        layout_count=1,
+        reader=fake_reader,
+    )
+    assert result.documents == 1
+    assert result.pages == 1
+    assert result.layouts == 1
+    assert result.acceptance_passed is True
+    assert result.required_exception_rate == 0.0
+
+    workbook = load_workbook(result.workbook_path)
+    sheet = workbook["Property Records"]
+    headers = [cell.value for cell in sheet[1]]
+    row = dict(zip(headers, [cell.value for cell in sheet[2]], strict=True))
+    assert row["parcel_id"] == "12-345-678"
+    assert row["parcel_id__source_pages"] == "1"
+    assert row["status"] == "ok"
+    assert workbook["Exceptions"].max_row == 1
+
+    manifest = json.loads(result.manifest_path.read_text())
+    assert manifest["summary"]["acceptance_passed"] is True
+    assert manifest["documents"][0]["source_sha256"]
+    assert manifest["spec"]["fingerprint"] == _property_spec().fingerprint
+
+
+def test_required_exception_fails_acceptance_but_still_delivers(tmp_path: Path) -> None:
+    incoming = tmp_path / "incoming"
+    incoming.mkdir()
+    (incoming / "record.pdf").write_bytes(b"fixture")
+
+    result = run_pdf_batch(
+        _property_spec(),
+        incoming,
+        tmp_path / "outgoing",
+        layout_count=1,
+        reader=lambda _path, _max_pages: [
+            PageText(1, "Parcel ID: 12-345\nDocument notes: enough text")
+        ],
+    )
+    assert result.acceptance_passed is False
+    assert result.required_exception_rate == 0.75
+    workbook = load_workbook(result.workbook_path)
+    assert workbook["Exceptions"].max_row == 4
+
+
+def test_document_limit_is_enforced_before_extraction(tmp_path: Path) -> None:
+    incoming = tmp_path / "incoming"
+    incoming.mkdir()
+    (incoming / "one.pdf").write_bytes(b"one")
+    (incoming / "two.pdf").write_bytes(b"two")
+    payload = _property_spec().model_copy(deep=True)
+    payload.limits.max_documents = 1
+
+    with pytest.raises(AutomationError, match="batch has 2 documents"):
+        run_pdf_batch(
+            payload,
+            incoming,
+            tmp_path / "outgoing",
+            layout_count=1,
+            reader=lambda _path, _max_pages: [PageText(1, "")],
+        )
+
+
+def test_image_only_pdf_is_marked_for_ocr_or_review(tmp_path: Path) -> None:
+    incoming = tmp_path / "incoming"
+    incoming.mkdir()
+    (incoming / "scan.pdf").write_bytes(b"scan")
+
+    result = run_pdf_batch(
+        _property_spec(),
+        incoming,
+        tmp_path / "outgoing",
+        layout_count=1,
+        reader=lambda _path, _max_pages: [PageText(1, "")],
+    )
+
+    assert result.acceptance_passed is False
+    assert result.required_exception_rate == 1.0
+    workbook = load_workbook(result.workbook_path)
+    sheet = workbook["Property Records"]
+    headers = [cell.value for cell in sheet[1]]
+    row = dict(zip(headers, [cell.value for cell in sheet[2]], strict=True))
+    assert row["input_status"] == "ocr_or_manual_review"
+
+
+def test_workbook_escapes_formula_like_document_values(tmp_path: Path) -> None:
+    incoming = tmp_path / "incoming"
+    incoming.mkdir()
+    (incoming / "record.pdf").write_bytes(b"fixture")
+
+    result = run_pdf_batch(
+        _property_spec(),
+        incoming,
+        tmp_path / "outgoing",
+        layout_count=1,
+        reader=lambda _path, _max_pages: [
+            PageText(
+                1,
+                "\n".join(
+                    [
+                        "Parcel ID: 12-345",
+                        'Address: =HYPERLINK("https://example.test")',
+                        "City: Royal Oak",
+                        "Interested Parties: Jane Doe",
+                    ]
+                ),
+            )
+        ],
+    )
+    workbook = load_workbook(result.workbook_path, data_only=False)
+    sheet = workbook["Property Records"]
+    headers = [cell.value for cell in sheet[1]]
+    row = dict(zip(headers, [cell.value for cell in sheet[2]], strict=True))
+    assert row["address"].startswith("'=HYPERLINK")
+
+
+def test_workbook_safety_preserves_signed_numeric_strings() -> None:
+    assert _excel_safe("-500.00") == "-500.00"
+    assert _excel_safe("+12") == "+12"
+    assert _excel_safe("-1+cmd") == "'-1+cmd"
+
+
+def test_layout_limit_is_enforced(tmp_path: Path) -> None:
+    incoming = tmp_path / "incoming"
+    incoming.mkdir()
+    (incoming / "record.pdf").write_bytes(b"fixture")
+
+    with pytest.raises(AutomationError, match="declares 4 layouts; limit is 3"):
+        run_pdf_batch(
+            _property_spec(),
+            incoming,
+            tmp_path / "outgoing",
+            layout_count=4,
+            reader=lambda _path, _max_pages: [PageText(1, "")],
+        )
+
+
+def test_page_limit_is_checked_before_text_extraction(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    class ExplodingPage:
+        def extract_text(self) -> str:
+            raise AssertionError("text extraction must not run")
+
+    class OversizedReader:
+        is_encrypted = False
+        pages = [ExplodingPage(), ExplodingPage()]
+
+    monkeypatch.setattr(
+        "backend.automations.pdf_batch.PdfReader", lambda _path: OversizedReader()
+    )
+
+    with pytest.raises(AutomationError, match="has 2 pages; limit is 1"):
+        read_pdf_pages(tmp_path / "oversized.pdf", max_pages=1)
+
+
+def test_complete_fields_with_insufficient_text_fail_acceptance(tmp_path: Path) -> None:
+    incoming = tmp_path / "incoming"
+    incoming.mkdir()
+    (incoming / "record.pdf").write_bytes(b"fixture")
+    spec = _property_spec().model_copy(deep=True)
+    spec.limits.min_extracted_text_characters = 1000
+
+    result = run_pdf_batch(
+        spec,
+        incoming,
+        tmp_path / "outgoing",
+        layout_count=1,
+        reader=lambda _path, _max_pages: [
+            PageText(
+                1,
+                "Parcel ID: 12-345\nProperty Address: 10 Main St\n"
+                "City: Royal Oak\nInterested Parties: Jane Doe",
+            )
+        ],
+    )
+
+    assert result.required_exception_rate == 0.0
+    assert result.acceptance_passed is False
+    manifest = json.loads(result.manifest_path.read_text())
+    assert manifest["documents"][0]["input_status"] == "ocr_or_manual_review"
+    assert manifest["summary"]["acceptance_passed"] is False

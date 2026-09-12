@@ -157,7 +157,6 @@ class LeadApiTests(unittest.TestCase):
 
         self.assertEqual(backend_main._request_client_ip(request), "203.0.113.42")
 
-
     def test_interactive_docs_are_closed_by_default(self) -> None:
         # Neither container sets ENVIRONMENT, so the default decides production
         # behaviour. It defaulted to "dev" and shipped /docs open to the internet.
@@ -168,16 +167,35 @@ class LeadApiTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertEqual(self.client.get(path).status_code, 404)
 
-
     def test_sparks_endpoint_hides_ideas_and_archived_projects(self) -> None:
         # The endpoint is public. Serving every spark published the whole idea
         # list to anyone who called it directly, even though the page hid them.
         upstream = {
             "sparks": [
-                {"name": "Shipped", "slug": "shipped", "stage": "live", "description": "real"},
-                {"name": "WIP", "slug": "wip", "stage": "building", "description": "real"},
-                {"name": "Someday", "slug": "someday", "stage": "idea", "description": "secret plan"},
-                {"name": "Dead", "slug": "dead", "stage": "archived", "description": "abandoned"},
+                {
+                    "name": "Shipped",
+                    "slug": "shipped",
+                    "stage": "live",
+                    "description": "real",
+                },
+                {
+                    "name": "WIP",
+                    "slug": "wip",
+                    "stage": "building",
+                    "description": "real",
+                },
+                {
+                    "name": "Someday",
+                    "slug": "someday",
+                    "stage": "idea",
+                    "description": "secret plan",
+                },
+                {
+                    "name": "Dead",
+                    "slug": "dead",
+                    "stage": "archived",
+                    "description": "abandoned",
+                },
             ]
         }
         mock_client = AsyncMock()
