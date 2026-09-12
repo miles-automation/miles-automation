@@ -362,7 +362,8 @@ def run_pdf_batch(
         round(required_exceptions / required_cells, 6) if required_cells else 0.0
     )
     acceptance_passed = (
-        required_exception_rate <= spec.acceptance.max_required_exception_rate
+        all(document.input_status == "text_ready" for document in documents)
+        and required_exception_rate <= spec.acceptance.max_required_exception_rate
     )
 
     destination = Path(output_dir)

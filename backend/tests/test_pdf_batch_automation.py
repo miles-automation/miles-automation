@@ -12,12 +12,12 @@ from backend.automations.pdf_batch import (
     read_pdf_pages,
     run_pdf_batch,
 )
-from backend.automations.spec import load_pdf_spec
+from backend.automations.spec import PdfGigSpec, load_pdf_spec
 
 SPECS = Path(__file__).parents[1] / "gig_specs"
 
 
-def _property_spec():
+def _property_spec() -> PdfGigSpec:
     return load_pdf_spec(SPECS / "pdf/property-records.json")
 
 
@@ -222,3 +222,31 @@ def test_page_limit_is_checked_before_text_extraction(
 
     with pytest.raises(AutomationError, match="has 2 pages; limit is 1"):
         read_pdf_pages(tmp_path / "oversized.pdf", max_pages=1)
+
+
+def test_complete_fields_with_insufficient_text_fail_acceptance(tmp_path: Path) -> None:
+    incoming = tmp_path / "incoming"
+    incoming.mkdir()
+    (incoming / "record.pdf").write_bytes(b"fixture")
+    spec = _property_spec().model_copy(deep=True)
+    spec.limits.min_extracted_text_characters = 1000
+
+    result = run_pdf_batch(
+        spec,
+        incoming,
+        tmp_path / "outgoing",
+        layout_count=1,
+        reader=lambda _path, _max_pages: [
+            PageText(
+                1,
+                "Parcel ID: 12-345\nProperty Address: 10 Main St\n"
+                "City: Royal Oak\nInterested Parties: Jane Doe",
+            )
+        ],
+    )
+
+    assert result.required_exception_rate == 0.0
+    assert result.acceptance_passed is False
+    manifest = json.loads(result.manifest_path.read_text())
+    assert manifest["documents"][0]["input_status"] == "ocr_or_manual_review"
+    assert manifest["summary"]["acceptance_passed"] is False
