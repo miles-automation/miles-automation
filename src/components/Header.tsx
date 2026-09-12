@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import styles from "./Header.module.css";
 
 const NAV_LINKS = [
-  { href: "#offer", label: "Offer" },
-  { href: "#process", label: "Process" },
-  { href: "#about", label: "About" },
+  { href: "#services", label: "The offer" },
+  { href: "#about", label: "How I work" },
+  { href: "#portfolio", label: "Portfolio" },
+  { href: "#contact", label: "Intake" },
 ];
 
 export default function Header() {
@@ -20,7 +21,7 @@ export default function Header() {
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.inner}>
-        <a href="#hero" className={styles.logo}>
+        <a href="#" className={styles.logo}>
           <span className={styles.logoBrackets}>[MA]</span>
           <span className={styles.logoText}>Miles Automation</span>
         </a>

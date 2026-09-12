@@ -4,32 +4,22 @@ export default function Hero() {
   return (
     <section className={styles.hero} id="hero">
       <div className={`container ${styles.content}`}>
-        <p className={styles.eyebrow}>Human-checked document extraction</p>
         <h1 className={styles.heading}>
-          Difficult PDFs,
-          <br />
-          <span>into checked data.</span>
+          Ship AI-written code <span className={styles.accent}>safely.</span>
         </h1>
         <p className={styles.sub}>
-          Send inconsistent PDFs with usable text layers. We return a checked
-          spreadsheet, source-page references, and visible exceptions. If your
-          samples are image-only scans, we quote the OCR or manual path
-          separately after preflight.
+          I install the delivery pipeline that builds, tests, deploys, monitors,
+          and rolls back automatically. I run one myself for about ten
+          production services.
         </p>
         <div className={styles.buttons}>
-          <a href="#offer" className="btn btn-primary">
-            See the pilot
+          <a href="#contact" className="btn btn-primary">
+            Talk through your pipeline
           </a>
-          <a href="#contact" className="btn btn-outline">
-            Send 5 samples
+          <a href="#about" className="btn btn-outline">
+            See how it works
           </a>
         </div>
-        <ul className={styles.promises} aria-label="Service promises">
-          <li>$149 pilot</li>
-          <li>Up to 100 pages</li>
-          <li>Human checked</li>
-          <li>No subscription</li>
-        </ul>
       </div>
     </section>
   );

@@ -40,7 +40,7 @@ be safely run. Correct exceptions in a copy of the delivery workbook; retain the
 generated audit manifest unchanged.
 
 `LAYOUTS` is required and must match the layouts confirmed during preflight.
-The public pilot specs reject more than 100 pages, 8 configured fields, or 3
+The included fixture specs reject more than 100 pages, 8 configured fields, or 3
 declared layouts. Layout count is operator-declared; keep one representative
 sample for every declared layout with the delivery record.
 
@@ -56,10 +56,11 @@ This is fulfillment tooling, not a public product boundary. Sensitive or
 regulated documents remain out of scope until storage, retention, access control,
 and deletion policies are implemented and reviewed.
 
-## Public pilot boundary
+## Historical pilot boundary
 
-The public offer is a $149 hard-case pilot, not a promise that every scan can be
-processed by the current runner. Prospects first send five representative,
+The earlier branch proposed a $149 hard-case pilot. The current website instead
+offers delivery-pipeline services; this tooling does not change that offer.
+For a separately agreed document batch, first obtain five representative,
 preferably redacted documents. Accept a batch only after confirming:
 
 - no more than 100 total pages, 8 requested fields, and 3 recurring layouts;

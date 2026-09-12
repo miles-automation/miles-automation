@@ -31,12 +31,16 @@ frontend-server:
 test:
 	@$(MAKE) test-backend
 	@$(MAKE) test-frontend
+	@$(MAKE) test-backend
 
 test-backend:
 	@cd backend && PYTHONPATH=.. uv run pytest -q
 
 test-frontend:
 	@npm run test
+
+test-backend:
+	@cd backend && uv run pytest
 
 lint:
 	@npm run lint

@@ -1,5 +1,3 @@
-"""Operator CLI for bounded fulfillment automations."""
-
 from __future__ import annotations
 
 import argparse

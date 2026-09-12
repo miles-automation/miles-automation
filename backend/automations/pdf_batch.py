@@ -1,10 +1,3 @@
-"""Auditable PDF-to-table fulfillment pipeline.
-
-The first implementation deliberately favors visible exceptions over guessed values.
-Each extracted cell retains its source page, and every run emits a workbook plus an
-append-only JSON audit manifest containing source hashes and operator-time telemetry.
-"""
-
 from __future__ import annotations
 
 import hashlib
@@ -21,6 +14,7 @@ from typing import Literal
 
 from openpyxl import Workbook
 from openpyxl.styles import Font
+from openpyxl.worksheet.worksheet import Worksheet
 from pypdf import PdfReader
 
 from backend.automations.spec import ExtractionField, PdfGigSpec
@@ -30,7 +24,7 @@ InputStatus = Literal["text_ready", "ocr_or_manual_review"]
 
 
 class AutomationError(RuntimeError):
-    """A bounded job cannot safely be executed as specified."""
+    pass
 
 
 @dataclass(frozen=True)
@@ -206,7 +200,7 @@ def extract_document(
     )
 
 
-def _style_sheet(sheet) -> None:  # noqa: ANN001 - openpyxl worksheet protocol
+def _style_sheet(sheet: Worksheet) -> None:
     for cell in sheet[1]:
         cell.font = Font(bold=True)
     sheet.freeze_panes = "A2"
@@ -219,7 +213,6 @@ def _style_sheet(sheet) -> None:  # noqa: ANN001 - openpyxl worksheet protocol
 def _excel_safe(
     value: str | int | float | bool | None,
 ) -> str | int | float | bool | None:
-    """Keep untrusted document text from becoming an Excel formula."""
     if isinstance(value, str) and value.startswith(("=", "+", "-", "@")):
         if value.startswith(("+", "-")):
             try:
@@ -232,8 +225,8 @@ def _excel_safe(
     return value
 
 
-def _append_safe(  # noqa: ANN001 - openpyxl worksheet protocol
-    sheet, values: Sequence[str | int | float | bool | None]
+def _append_safe(
+    sheet: Worksheet, values: Sequence[str | int | float | bool | None]
 ) -> None:
     sheet.append([_excel_safe(value) for value in values])
 
@@ -250,6 +243,7 @@ def _write_workbook(
 ) -> None:
     workbook = Workbook()
     data = workbook.active
+    assert isinstance(data, Worksheet)
     data.title = spec.output.workbook_sheet
     headers = [
         "source_file",

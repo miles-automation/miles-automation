@@ -4,23 +4,50 @@ export default function About() {
   return (
     <section id="about">
       <div className="container">
-        <h2>Built from the work backward</h2>
+        <h2>How I work</h2>
         <p className={styles.intro}>
-          Miles Automation turns difficult document-conversion jobs into a
-          dependable, productized service. We begin with the actual batch,
-          fulfill it end to end, and automate the slowest steps as evidence
-          accumulates.
+          I run Miles Automation on my own. About ten production services use
+          this pipeline right now, including IEOMD, Human Index, Esher&apos;s
+          Codex, Noodle, and Spark Swarm. This site uses it too.
         </p>
         <p className={styles.intro}>
-          The result is deliberately less magical than most AI pitches: fixed
-          scope, visible exceptions, source-linked outputs, and a human who is
-          accountable for the final spreadsheet.
+          A merge builds the image, runs migrations, health-checks the service
+          through the reverse proxy, and rolls back automatically if that check
+          fails. Uptime probes alert a chat room. Secrets come from an API
+          instead of hand-edited <code>.env</code> files.
         </p>
-        <p className={styles.intro}>
-          When a pilot repeats, the automation becomes standing infrastructure.
-          Until then, you are buying the completed job—not a platform rollout or
-          another monthly software seat.
-        </p>
+        <div className={styles.proofGrid}>
+          <div>
+            <h3>How changes get reviewed</h3>
+            <p>
+              Claude and Codex work against real repositories with separate
+              machine identities, isolated git worktrees, and one PR per change.
+              A human or second model reviews the work before merge.
+            </p>
+          </div>
+          <div>
+            <h3>How releases roll back</h3>
+            <p>
+              The deployment checks the service through the same reverse proxy
+              your users hit. If that check fails, the release rolls back on its
+              own and the previous version keeps serving.
+            </p>
+          </div>
+        </div>
+        <div className={styles.fitGrid}>
+          <div>
+            <h3>Good fit</h3>
+            <p>
+              Teams whose deploys are manual, scary, or slower than the code
+              they are writing. Especially teams picking up coding agents
+              without a safety net.
+            </p>
+          </div>
+          <div>
+            <h3>Not a fit</h3>
+            <p>One-off marketing sites or staff augmentation by the hour.</p>
+          </div>
+        </div>
         <div className={styles.links}>
           <a
             href="https://richmiles.xyz"

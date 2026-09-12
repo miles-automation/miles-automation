@@ -1,5 +1,3 @@
-"""Versioned, executable specifications for bounded fulfillment gigs."""
-
 from __future__ import annotations
 
 import hashlib
@@ -13,8 +11,6 @@ from pydantic import BaseModel, Field, model_validator
 
 
 class GigSource(BaseModel):
-    """The paid-demand observation that motivated an automation fixture."""
-
     marketplace: str
     url: str
     observed_at: date
@@ -32,8 +28,6 @@ class BatchLimits(BaseModel):
 
 
 class AcceptanceSpec(BaseModel):
-    """Machine-checkable floor; exceptions still remain visible to the operator."""
-
     max_required_exception_rate: float = Field(default=0.01, ge=0.0, le=1.0)
 
 

@@ -4,40 +4,26 @@ import App from "../App";
 describe("App", () => {
   it("renders the hero heading", () => {
     render(<App />);
-    expect(screen.getByText(/Difficult PDFs/)).toBeInTheDocument();
+    expect(screen.getByText(/Ship AI-written code/)).toBeInTheDocument();
   });
 
-  it("does not render an uncurated portfolio", () => {
+  it("renders the portfolio section", () => {
     render(<App />);
     expect(
-      screen.queryByText(/Systems behind the service/),
-    ).not.toBeInTheDocument();
-    expect(screen.queryByText(/Bullshit or Fit/)).not.toBeInTheDocument();
-  });
-
-  it("renders the bounded document pilot", () => {
-    render(<App />);
-    expect(
-      screen.getByRole("heading", {
-        name: "Messy documents → checked spreadsheet",
-      }),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText("$149 pilot")).toHaveLength(2);
-    expect(screen.getByText(/Up to 100 total pages/)).toBeInTheDocument();
-    expect(screen.queryByText(/lead list/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/image-only scans need/i)).toBeInTheDocument();
-  });
-
-  it("requires a preflight before payment", () => {
-    render(<App />);
-    expect(screen.getByText(/before payment/i)).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: /Send 5 samples for preflight/i }),
+      screen.getByRole("heading", { name: "Portfolio" }),
     ).toBeInTheDocument();
   });
 
-  it("renders the contact email", () => {
+  it("renders the offer section", () => {
     render(<App />);
-    expect(screen.getByText(/info@milesautomation\.com/)).toBeInTheDocument();
+    expect(screen.getByText("Pipeline audit")).toBeInTheDocument();
+  });
+
+  it("renders the intake form", () => {
+    render(<App />);
+    expect(
+      screen.getByRole("heading", { name: "Talk through your pipeline" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "Name" })).toBeInTheDocument();
   });
 });
