@@ -5,6 +5,16 @@ const SERVICES = [
     title: "Pipeline audit",
     timing: "About a week · fixed fee",
     desc: "I trace where releases actually break: tests, migrations, deploys, health checks, secrets, and handoffs. You get a written order of operations the team can act on with or without me.",
+    audits: [
+      {
+        title: "Diagnose one slow .NET workflow",
+        desc: "Pick one slow upload, report, or screen. I reproduce it in a test environment, measure where the time goes in the app and SQL Server, and give you written findings and what I’d fix first.",
+      },
+      {
+        title: "Review an AI-written app",
+        desc: "Pick one part of the app you rely on. I check what happens when a request fails or runs twice, how secrets are handled, and what your tests miss. You get a ranked list of fixes and what to test before shipping again.",
+      },
+    ],
   },
   {
     title: "Pipeline install",
@@ -29,11 +39,25 @@ export default function Services() {
         </p>
         <div className={styles.grid}>
           {SERVICES.map((s) => (
-            <div key={s.title} className={styles.card}>
+            <article key={s.title} className={styles.card}>
               <h3>{s.title}</h3>
               <span className={styles.timing}>{s.timing}</span>
               <p className={styles.desc}>{s.desc}</p>
-            </div>
+              {s.audits && (
+                <div className={styles.audits}>
+                  {s.audits.map((audit) => (
+                    <div key={audit.title}>
+                      <h4>{audit.title}</h4>
+                      <p className={styles.desc}>{audit.desc}</p>
+                    </div>
+                  ))}
+                  <p className={styles.desc}>
+                    Both end with a written report. No production changes.
+                    Implementation is quoted separately.
+                  </p>
+                </div>
+              )}
+            </article>
           ))}
         </div>
       </div>

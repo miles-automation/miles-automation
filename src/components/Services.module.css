@@ -34,3 +34,16 @@
   font-size: 0.9375rem;
   line-height: 1.6;
 }
+
+.audits {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.audits h4 {
+  margin-bottom: 0.25rem;
+  font-size: 0.9375rem;
+}
