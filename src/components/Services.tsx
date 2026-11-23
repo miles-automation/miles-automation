@@ -7,12 +7,12 @@ const SERVICES = [
     desc: "I trace where releases actually break: tests, migrations, deploys, health checks, secrets, and handoffs. You get a written order of operations the team can act on with or without me.",
     audits: [
       {
-        title: "Diagnose one slow .NET workflow",
-        desc: "Pick one slow upload, report, or screen. I reproduce it in a test environment, measure where the time goes in the app and SQL Server, and give you written findings and what I’d fix first.",
+        title: "Find out why your app is slow",
+        desc: "Pick one slow upload, report, or screen. I reproduce it in a test environment, measure where the time goes in the app and database, and give you written findings and what I’d fix first.",
       },
       {
-        title: "Review an AI-written app",
-        desc: "Pick one part of the app you rely on. I check what happens when a request fails or runs twice, how secrets are handled, and what your tests miss. You get a ranked list of fixes and what to test before shipping again.",
+        title: "Get a second set of eyes before you ship",
+        desc: "Pick one workflow you rely on, including in apps built with AI. I check what happens when a request fails or runs twice, how secrets are handled, and what your tests miss. You get a ranked list of fixes and what to test before shipping again.",
       },
     ],
   },
@@ -51,6 +51,10 @@ export default function Services() {
                       <p className={styles.desc}>{audit.desc}</p>
                     </div>
                   ))}
+                  <p className={styles.desc}>
+                    I work with C#/.NET, Python, and TypeScript, including apps
+                    backed by SQL Server or PostgreSQL.
+                  </p>
                   <p className={styles.desc}>
                     Both end with a written report. No production changes.
                     Implementation is quoted separately.

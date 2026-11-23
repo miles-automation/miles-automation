@@ -25,14 +25,26 @@ describe("App", () => {
     const audit = within(auditHeading.closest("article")!);
 
     expect(
-      audit.getByRole("heading", { name: "Diagnose one slow .NET workflow" }),
+      audit.getByRole("heading", { name: "Find out why your app is slow" }),
     ).toBeInTheDocument();
     expect(audit.getByText(/measure where the time goes/)).toBeInTheDocument();
     expect(
-      audit.getByRole("heading", { name: "Review an AI-written app" }),
+      audit.getByText(/Pick one slow upload, report, or screen/),
     ).toBeInTheDocument();
     expect(
-      audit.getByText(/when a request fails or runs twice/),
+      audit.getByRole("heading", {
+        name: "Get a second set of eyes before you ship",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      audit.getByText(
+        /Pick one workflow you rely on, including in apps built with AI/,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      audit.getByText(
+        /C#\/\.NET, Python, and TypeScript.*SQL Server or PostgreSQL/,
+      ),
     ).toBeInTheDocument();
     expect(
       audit.getByText(
