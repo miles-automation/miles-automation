@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
+import { readAttribution } from "../attribution";
 import styles from "./Contact.module.css";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
@@ -56,7 +57,10 @@ function LeadForm() {
       const response = await fetch("/api/v1/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          ...readAttribution(window.location.search),
+        }),
       });
 
       let detail = "";

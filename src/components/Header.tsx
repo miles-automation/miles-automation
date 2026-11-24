@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { trackIntakeClick } from "../attribution";
 import styles from "./Header.module.css";
 
 const NAV_LINKS = [
@@ -43,7 +44,10 @@ export default function Header() {
               key={link.href}
               href={link.href}
               className={styles.navLink}
-              onClick={() => setMenuOpen(false)}
+              onClick={() => {
+                if (link.href === "#contact") trackIntakeClick("nav");
+                setMenuOpen(false);
+              }}
             >
               {link.label}
             </a>

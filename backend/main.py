@@ -9,7 +9,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from backend.config import settings
-from backend.lead_schemas import LeadRequest
+from backend.lead_schemas import APPROVED_TAGS, LeadRequest
 
 _http_client: httpx.AsyncClient | None = None
 
@@ -231,6 +231,7 @@ async def submit_lead(request: Request, lead: LeadRequest):
         "message": lead.message,
         "source_url": "https://milesautomation.com/#contact",
         "website": lead.website,
+        **lead.model_dump(include=set(APPROVED_TAGS), exclude_none=True),
     }
 
     try:

@@ -1,3 +1,4 @@
+import { trackIntakeClick } from "../attribution";
 import styles from "./Hero.module.css";
 
 export default function Hero() {
@@ -13,7 +14,11 @@ export default function Hero() {
           production services.
         </p>
         <div className={styles.buttons}>
-          <a href="#contact" className="btn btn-primary">
+          <a
+            href="#contact"
+            className="btn btn-primary"
+            onClick={() => trackIntakeClick("hero")}
+          >
             Talk through your pipeline
           </a>
           <a href="#about" className="btn btn-outline">

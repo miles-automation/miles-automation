@@ -1,8 +1,20 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import Contact from "../components/Contact";
 
+afterEach(() => {
+  window.history.replaceState({}, "", "/");
+  vi.unstubAllGlobals();
+});
+
 describe("Contact lead form", () => {
   it("submits the labeled fields and shows success", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      "/?utm_source=google&utm_medium=email&utm_medium=cpc&utm_campaign=private%40example.com&gclid=secret",
+    );
+    const track = vi.fn();
+    vi.stubGlobal("umami", { track });
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       status: 202,
@@ -43,9 +55,11 @@ describe("Contact lead form", () => {
           company: "Analytical Engines",
           message: "We merge manually and deploy from a laptop.",
           website: "",
+          utm_source: "google",
         }),
       }),
     );
+    expect(track).not.toHaveBeenCalled();
   });
 
   it("shows an upstream error", async () => {

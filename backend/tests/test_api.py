@@ -69,6 +69,33 @@ class LeadApiTests(unittest.TestCase):
             headers={"X-Forwarded-For": "203.0.113.7"},
         )
 
+    def test_attribution_ignores_unapproved_input_without_blocking_intake(self) -> None:
+        mock_client = AsyncMock()
+        mock_client.post.return_value = httpx.Response(202, json={"status": "accepted"})
+        payload = {
+            **self._payload(),
+            "utm_source": "google",
+            "utm_medium": ["email", "cpc"],
+            "utm_campaign": "customer@example.com",
+            "source_url": "https://evil.example/?gclid=123",
+            "gclid": "click-id",
+        }
+
+        with patch.object(backend_main, "_http_client", mock_client):
+            response = self.client.post("/api/v1/lead", json=payload)
+
+        self.assertEqual(response.status_code, 202)
+        args = mock_client.post.await_args
+        assert args is not None
+        self.assertEqual(
+            args.kwargs["json"],
+            {
+                **self._payload(),
+                "source_url": "https://milesautomation.com/#contact",
+                "utm_source": "google",
+            },
+        )
+
     def test_lead_endpoint_rejects_invalid_payload(self) -> None:
         response = self.client.post(
             "/api/v1/lead",
